@@ -1,4 +1,4 @@
-class Scatterplot {
+class ScatterPlot {
 
   /**
    * Class constructor with basic chart configuration
@@ -21,7 +21,7 @@ class Scatterplot {
     this.data = _data;
     this.initVis();
   }
-  
+
   /**
    * We initialize scales/axes and append static elements, such as axis titles.
    */
@@ -46,7 +46,7 @@ class Scatterplot {
     // Define size of SVG drawing area
     vis.svg = d3.select(vis.config.parentElement).append('svg');
 
-    // Append group element that will contain our actual chart 
+    // Append group element that will contain our actual chart
     // and position it according to the given margin config
     vis.chart = vis.svg.append('g')
         .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
@@ -54,7 +54,7 @@ class Scatterplot {
     // Append empty x-axis group and move it to the bottom of the chart
     vis.xAxisG = vis.chart.append('g')
         .attr('class', 'axis x-axis');
-    
+
     // Append y-axis group
     vis.yAxisG = vis.chart.append('g')
         .attr('y', 100)
@@ -95,7 +95,7 @@ class Scatterplot {
     // Calculate inner chart size. Margin specifies the space around the actual chart.
     vis.config.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
     vis.config.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
-    
+
     vis.svg
         .attr('width', vis.config.containerWidth)
         .attr('height', vis.config.containerHeight);
@@ -117,7 +117,7 @@ class Scatterplot {
     vis.xScale
         .range([0, vis.config.width])
         .domain([0, d3.max(vis.data, vis.config.xValue)]);
-    
+
     vis.yScale
         .range([vis.config.height, 0])
         .domain([0, d3.max(vis.data, vis.config.yValue)]);
@@ -161,7 +161,7 @@ class Scatterplot {
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
         });
-    
+
     // Update the axes/gridlines
     // We use the second .call() to remove the axis and just show gridlines
     vis.xAxisG
