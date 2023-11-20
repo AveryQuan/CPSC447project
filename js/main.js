@@ -34,6 +34,14 @@ d3.csv("data/movies.csv")
     // }, data);
     // treemapVis.updateVis();
 
+    const squarebar = new Squarebar (
+      {
+        parentElement: "#squareBarDiv",
+        // Optional: other configurations
+      },
+      data
+    );
+    squarebar.updateVis();
   })
   .catch(error => console.error('Error loading the dataset:', error));
 
