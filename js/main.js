@@ -27,13 +27,18 @@ d3.csv("data/movies.csv")
         xTick: " M"
       }, data);
     votesScorePlotVis.updateVis();
+    
+    treeMap = new TreeMap({ parentElement: '#treemapDiv' }, data, dispatcher);
+    treeMap.updateVis();
 
-    // treemapVis = new Treemap({
-    //   parentElement: '#treemapDiv',
-    //   // other configuration
-    // }, data);
-    // treemapVis.updateVis();
-
+    const squarebar = new Squarebar (
+      {
+        parentElement: "#squareBarDiv",
+        // Optional: other configurations
+      },
+      data
+    );
+    squarebar.updateVis();
   })
   .catch(error => console.error('Error loading the dataset:', error));
 
