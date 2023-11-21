@@ -60,7 +60,7 @@ function preprocessData(_data) {
         return genreBFrequency - genreAFrequency; 
     });
     console.log("First few sorted records:", _data.slice(0, 10));
-
+    console.log("all data points", _data);
     return _data;
 }
 
