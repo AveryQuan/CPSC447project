@@ -27,12 +27,9 @@ d3.csv("data/movies.csv")
         xTick: " M"
       }, data);
     votesScorePlotVis.updateVis();
-
-    // treemapVis = new Treemap({
-    //   parentElement: '#treemapDiv',
-    //   // other configuration
-    // }, data);
-    // treemapVis.updateVis();
+    
+    treeMap = new TreeMap({ parentElement: '#treemapDiv' }, data, dispatcher);
+    treeMap.updateVis();
 
     const squarebar = new Squarebar (
       {

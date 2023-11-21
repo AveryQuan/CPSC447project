@@ -9,8 +9,27 @@
 </head>
 <body>    
     <h1>Movie Dashboard</h1>
-    <div>
-        <div id="treemapDiv"></div>
+    <div class="top-container">
+        <div class="tree-map">
+            <div id="treemapDiv"></div>
+            <ul class="legend">
+                <li class="legend-item" data-category="winter-storm-freeze">
+                    <div class="legend-circle" style="background-color: #1f77b4"></div>
+                    Comedy</li>
+                <li class="legend-item" data-category="drought-wildfire">
+                    <div class="legend-circle" style="background-color: #ff7f0e"></div>
+                    Action</li>
+                <li class="legend-item" data-category="flooding">
+                    <div class="legend-circle" style="background-color: #2ca02c"></div>
+                    Drama</li>
+                <li class="legend-item" data-category="tropical-cyclone">
+                    <div class="legend-circle" style="background-color: #d62728"></div>
+                    Crime</li>
+                <li class="legend-item" data-category="severe-storm">
+                    <div class="legend-circle" style="background-color: #9467bd"></div>
+                    Biography</li>
+            </ul>
+            </div>
         <div id="squareBarDiv"></div></div>
     <div id="content" class="scatterplotPosition">
         <div id="scatterPlotDiv"></div>
