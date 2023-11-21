@@ -8,6 +8,7 @@ class ScatterPlot {
   constructor(_config, _data) {
     this.config = {
       parentElement: _config.parentElement,
+      containerWidth: 1000,
       containerHeight: 400,
       margin: {top: 75, right: 20, bottom: 20, left: 35},
       tooltipPadding: 15,
@@ -88,9 +89,6 @@ class ScatterPlot {
    */
   updateVis() {
     let vis = this;
-
-    // Update all dimensions based on the current screen size
-    vis.config.containerWidth = document.getElementById(vis.config.parentElement.substring(1)).clientWidth;
 
     // Calculate inner chart size. Margin specifies the space around the actual chart.
     vis.config.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
