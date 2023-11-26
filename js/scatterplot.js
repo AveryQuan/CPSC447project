@@ -82,6 +82,13 @@ class ScatterPlot {
         .attr('y', -20)
         .attr('dy', '.71em')
         .text(vis.config.yTitle);
+
+        dispatcher.on('selectMovie.scatterplot', movieName => {
+          console.log('ScatterPlot highlighting:', movieName);
+          this.highlightPoint(movieName);
+        });
+
+      vis.updateVis();
   }
 
   /**
@@ -120,6 +127,9 @@ class ScatterPlot {
         .range([vis.config.height, 0])
         .domain([0, d3.max(vis.data, vis.config.yValue)]);
 
+        console.log('Example data item in ScatterPlot:', vis.data[1]); // Add this line
+
+
     vis.renderVis();
   }
 
@@ -131,12 +141,15 @@ class ScatterPlot {
 
     // Add circles
     const circles = vis.chart.selectAll('.point')
-        .data(vis.data, d => d.trail)
+        .data(vis.data, d => d.name)
       .join('circle')
         .attr('class', 'point')
         .attr('r', 4)
         .attr('cy', d => vis.yScale(vis.config.yValue(d)))
-        .attr('cx', d => vis.xScale(vis.config.xValue(d)));
+        .attr('cx', d => vis.xScale(vis.config.xValue(d)))
+        .on('click', d => {
+          dispatcher.call('selectMovie', null, d.name);
+        });
 
     // Tooltip event listeners
     circles
@@ -158,6 +171,10 @@ class ScatterPlot {
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
+        })
+        .on('click', d => {
+          console.log('ScatterPlot clicked:', d.name); // Logging the clicked movie name
+          dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
         });
 
     // Update the axes/gridlines
@@ -169,5 +186,16 @@ class ScatterPlot {
     vis.yAxisG
         .call(vis.yAxis)
         .call(g => g.select('.domain').remove())
+
+  }
+  highlightPoint(movieName) {
+    console.log('Highlighting in ScatterPlot:', movieName);
+    this.chart.selectAll('.point')
+      .classed('highlighted', d => d.name === movieName);
+  }
+  
+  unhighlightPoints() {
+    this.chart.selectAll('.point')
+      .classed('highlighted', false);
   }
 }

@@ -1,6 +1,6 @@
 let data, scatterPlotVis, treemapVis, votesScorePlotVis;
 
-const dispatcher = d3.dispatch('event1', 'event2'); // Replace events with event names
+const dispatcher = d3.dispatch('selectMovie');
 
 d3.csv("data/movies.csv")
   .then(_data => {
@@ -39,6 +39,12 @@ d3.csv("data/movies.csv")
       data
     );
     squarebar.updateVis();
+
+    dispatcher.on('selectMovie', function(movieName) {
+      scatterPlotVis.highlightPoint(movieName);
+      votesScorePlotVis.highlightPoint(movieName);
+      squarebar.highlightSquare(movieName);
+    });
   })
   .catch(error => console.error('Error loading the dataset:', error));
 
@@ -53,8 +59,6 @@ function preprocessData(_data) {
     _data = _data.filter(d => d.year >= 2010);
 
     const genreFrequency = d3.rollup(_data, v => v.length, d => d.genre);
-
-
     let genreToFrequencyMap = new Map(genreFrequency);
 
     _data.sort((a, b) => {
@@ -62,11 +66,8 @@ function preprocessData(_data) {
         let genreBFrequency = genreToFrequencyMap.get(b.genre) || 0;
         return genreBFrequency - genreAFrequency; 
     });
+    console.log("Processed Data:", _data);
 
     return _data;
 }
 
-dispatcher.on('event1', function(someParameter) {
-    // scatterPlotVis.updateVis();
-    // etc.
-});

@@ -74,6 +74,11 @@ class Squarebar {
     // Optional: other static elements
     // ...
 
+    dispatcher.on('selectMovie.squarebar', movieName => {
+      console.log('Squarebar highlighting:', movieName);
+      this.highlightSquare(movieName);
+    });
+
     vis.updateVis();
   }
 
@@ -140,7 +145,12 @@ class Squarebar {
     const squares = column
       .merge(columnEnter)
       .selectAll(".square")
-      .data((d) => d[1]);
+      .data((d) => d[1], d => d.name)
+      .on('click', d => {
+        dispatcher.call('selectMovie', null, d.name);
+      });
+
+    
 
     // Enter square
     const squareEnter = squares.enter().append("rect").attr("class", "square");
@@ -185,6 +195,10 @@ class Squarebar {
 
         // Hide the tooltip
         d3.select("#tooltip").style("display", "none");
+      })
+      .on('click', d => {
+        console.log('Squarebar clicked:', d.name);
+        dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
       });
 
     // Exit square
@@ -196,5 +210,16 @@ class Squarebar {
 
     // Todo: Display the disaster category legend that also serves as an interactive filter.
     // You can add the legend also to `index.html` instead and have your event listener in `main.js`.
+  }
+
+  highlightSquare(movieName) {
+    console.log('Highlighting in Squarebar:', movieName);
+    this.chart.selectAll('.square')
+      .classed('highlighted', d => d.name === movieName);
+  }
+  
+  unhighlightSquares() {
+    this.chart.selectAll('.square')
+      .classed('highlighted', false);
   }
 }

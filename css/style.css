@@ -158,3 +158,9 @@ h1 {
   display: inline-flex;
   /* flex-direction: row; */
 }
+
+.highlighted {
+  stroke: rgb(15, 184, 18);
+  stroke-width: 3px;
+  fill: red; /* or any other style changes to make it noticeable */
+}
