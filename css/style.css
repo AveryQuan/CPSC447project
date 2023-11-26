@@ -18,6 +18,10 @@ h1 {
   stroke: white;
   stroke-width: 5;
 }
+.tree-map-rect.selected {
+  stroke: white;
+  stroke-width: 7;
+}
 
 /* Legend */
 .legend-item {
