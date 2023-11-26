@@ -1,4 +1,4 @@
-let genres;``
+let genres;
 class TreeMap {
     /**
    * Class constructor with initial configuration
@@ -77,6 +77,7 @@ class TreeMap {
         obj[key] = value;
         return obj;
       }, {});
+    console.log(vis.genresKeyValue)
     genres.sort((a, b) => b[1] - a[1]);
 
     vis.colourScale.domain(vis.listOfGenres);
@@ -102,6 +103,17 @@ class TreeMap {
     .attr('fill', d => vis.colourScale(d.data[0]))
     .attr('stroke', 'white')
     .attr('stroke-width', 2);
+
+    rect.on('click', function(event, d) {
+      const isSelected = d3.select(this).classed('selected');
+      // d3.selectAll('.tree-map-rect.selected').classed('selected', false)
+      d3.select(this).classed('selected', !isSelected);
+      const eventData = vis.chart.selectAll('.tree-map-rect.selected').data().map(k => k.data[0])
+
+      console.log(eventData)
+
+      vis.dispatcher.call('filterGenre', event, eventData)
+    })
 
 
     rect.on('mouseover', (event,d) => {
