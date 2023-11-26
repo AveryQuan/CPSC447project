@@ -99,14 +99,12 @@ class TreeMap {
     .attr('class', 'tree-map-rect')
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0)
-    .attr('fill', d => {console.log("key", vis.colourScale(d.data[0])); return vis.colourScale(d.data[0])})
+    .attr('fill', d => vis.colourScale(d.data[0]))
     .attr('stroke', 'white')
     .attr('stroke-width', 2);
 
 
     rect.on('mouseover', (event,d) => {
-        console.log("here: ", d.data[0])
-        console.log(vis.genresKeyValue)
         d3.select('#tooltip')
           .style('display', 'block')
           .html(`

@@ -54,8 +54,6 @@ function preprocessData(_data) {
 
     const genreFrequency = d3.rollup(_data, v => v.length, d => d.genre);
 
-    console.log("Genre Frequencies:", genreFrequency);
-
 
     let genreToFrequencyMap = new Map(genreFrequency);
 
@@ -64,8 +62,7 @@ function preprocessData(_data) {
         let genreBFrequency = genreToFrequencyMap.get(b.genre) || 0;
         return genreBFrequency - genreAFrequency; 
     });
-    console.log("First few sorted records:", _data.slice(0, 10));
-    console.log("all data points", _data);
+
     return _data;
 }
 
