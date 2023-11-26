@@ -27,7 +27,7 @@ d3.csv("data/movies.csv")
         xTick: " M"
       }, data);
     votesScorePlotVis.updateVis();
-    
+
     treeMap = new TreeMap({ parentElement: '#treemapDiv' }, data, dispatcher);
     treeMap.updateVis();
 
