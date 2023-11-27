@@ -11,8 +11,8 @@ class ScatterPlot {
       containerWidth: 1000,
       containerHeight: 600,
       margin: {top: 75, right: 20, bottom: 70, left: 35},
-      contextMargin: {top: 500, right: 10, bottom: 20, left: 35},
-      contextHeight: 70,
+      contextMargin: {top: 470, right: 10, bottom: 20, left: 35},
+      contextHeight: 100,
       tooltipPadding: 15,
       xValue: _config.xValue,
       yValue: _config.yValue,
@@ -60,6 +60,12 @@ class ScatterPlot {
     // Append focus group with x- and y-axes
     vis.brushGroup = vis.svg.append('g')
         .attr('transform', `translate(${vis.config.contextMargin.left},${vis.config.contextMargin.top})`);
+
+    vis.brushGroup.append('defs').append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+        .attr('width', vis.config.width)
+        .attr('height', vis.config.height);
 
     // Append group element that will contain our actual chart
     // and position it according to the given margin config
@@ -121,10 +127,10 @@ class ScatterPlot {
           if (!selection) vis.brushed(null);
         });
 
-        dispatcher.on('selectMovie.scatterplot', movieName => {
-          console.log('ScatterPlot highlighting:', movieName);
-          this.highlightPoint(movieName);
-        });
+    dispatcher.on('selectMovie.scatterplot', movieName => {
+      console.log('ScatterPlot highlighting:', movieName);
+      this.highlightPoint(movieName);
+    });
 
       vis.updateVis();
 
@@ -202,7 +208,7 @@ class ScatterPlot {
     };
 
     // Add circles
-    const circles = vis.chart.selectAll('.point')
+    vis.circles = vis.chart.selectAll('.point')
         .data(vis.data, d => d.name)
       .join('circle')
         .attr('class', 'point')
@@ -243,10 +249,13 @@ class ScatterPlot {
         });
 
     const circlesBrush = vis.brushGroup.selectAll('.point')
-        .data(vis.data, d => d.trail)
+        .data(vis.data, d => d.name)
         .join('circle')
         .attr('class', 'point')
         .attr('r', 2)
+        .attr("fill", (d) => {
+          return genreColour[d.genre] || "#dbdb8d"
+        })
         .attr('cy', d => vis.yScaleBrush(vis.config.yValue(d)))
         .attr('cx', d => vis.xScaleBrush(vis.config.xValue(d)));
 
@@ -260,6 +269,13 @@ class ScatterPlot {
         .call(vis.yAxis)
         .call(g => g.select('.domain').remove())
 
+    vis.xAxisBrushG.call(vis.xAxisBrush);
+
+    // Update the brush and define a default position
+    const defaultBrushSelection = [vis.xScale(0), vis.xScaleBrush.range()[1]];
+    vis.brushG
+        .call(vis.brush)
+        .call(vis.brush.move, defaultBrushSelection);
   }
   highlightPoint(movieName) {
     console.log('Highlighting in ScatterPlot:', movieName);
@@ -271,13 +287,7 @@ class ScatterPlot {
     this.chart.selectAll('.point')
       .classed('highlighted', false);
 
-    vis.xAxisBrushG.call(vis.xAxisBrush);
 
-    // Update the brush and define a default position
-    const defaultBrushSelection = [vis.xScale(0), vis.xScaleBrush.range()[1]];
-    vis.brushG
-        .call(vis.brush)
-        .call(vis.brush.move, defaultBrushSelection);
   }
 
   /**
