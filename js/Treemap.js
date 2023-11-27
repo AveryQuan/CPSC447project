@@ -7,14 +7,14 @@ class TreeMap {
   constructor(_config, data, dispatcher) {
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: 600,
+      containerWidth: 500,
       containerHeight: 380,
       tooltipPadding: 15,
       margin: {
-        top: 15,
-        right: 15,
+        top: 80,
+        right: 40,
         bottom: 20,
-        left: 25
+        left: 60
       }
     }
     this.data = data;
@@ -39,7 +39,13 @@ class TreeMap {
     vis.chart = vis.svg.append('g')
       .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
 
-
+    vis.title = vis.svg.append('text')
+      .attr('class', 'chart-title')
+      .attr('dy', '.71em')
+      .attr('x', 58)
+      .attr('y', 2)
+      .style('text-anchor', 'left')
+      .text("Distribution of Movie Genres");
     vis.listOfGenres = ['Comedy', 'Action', 'Drama', 'Crime', 'Biography', 'Adventure', 'Animation', 'Horror', 'Fantasy', 'Mystery', 'Thriller', 'Family', 'Sci-Fi', 'Romance', 'Western', 'Musical', 'Music', 'History', 'Sport']
     vis.genreColour = {
         Comedy: "#1f77b4",

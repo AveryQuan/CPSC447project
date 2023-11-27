@@ -27,8 +27,8 @@ h1 {
 .legend-item {
   display: inline-block;
   margin: 0 35px 0 0;
-  cursor: pointer;
   color: gray;
+  width: 100px;
 }
 
 .legend-item.filtered {
@@ -45,6 +45,7 @@ h1 {
   border: 0.5px solid #333;
   margin-right: 10px;
 }
+
 
 /* Scatterplot */
 #scatterplot {
@@ -99,6 +100,12 @@ h1 {
 
 .point {
   opacity: 0.5;
+}
+
+/* BarChart */
+
+.column-text {
+  white-space: normal;
 }
 
 /* Legend */

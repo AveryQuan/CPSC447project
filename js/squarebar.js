@@ -9,7 +9,7 @@ class Squarebar {
       parentElement: _config.parentElement,
       disasterCategories: _config.disasterCategories,
       containerWidth: 800,
-      containerHeight: 500,
+      containerHeight: 440,
       tooltipPadding: 15,
       margin: { top: 400, right: 20, bottom: 20, left: 45 },
       legendWidth: 170,
@@ -36,7 +36,7 @@ class Squarebar {
 
     vis.xScale = d3.scaleBand().range([0, vis.width]).paddingInner(0.2);
 
-    vis.xAxis = d3.axisBottom(vis.xScale);
+    vis.xAxis = d3.axisBottom(vis.xScale).tickSize(0);
 
     vis.yAxis = d3.axisLeft(vis.yScale).tickSize(-vis.width - 10);
 
@@ -73,6 +73,14 @@ class Squarebar {
 
     // Optional: other static elements
     // ...
+
+    vis.title = vis.svg.append('text')
+    .attr('class', 'chart-title')
+    .attr('dy', '.71em')
+    .attr('x', 48)
+    .attr('y', 2)
+    .style('text-anchor', 'left')
+    .text("Movies Overview");
 
     dispatcher.on('selectMovie.squarebar', movieName => {
       console.log('Squarebar highlighting:', movieName);
@@ -133,6 +141,38 @@ class Squarebar {
 
     // Enter
     const columnEnter = column.enter().append("g").attr("class", "column");
+
+    columnEnter.append("text")
+    .attr("class", "column-text")
+    .attr("y", d => {
+      if (d[0] !== 2020) {
+        return -363;
+      } else {
+        return -62
+      }})
+    .attr("x", d => {
+      if (d[0] !== 2020) {
+        return 15;
+      } else {
+        return 19
+      }}) // Adjust the y-coordinate as needed
+    .text((d) => {
+      return d[1].length
+    }) 
+  
+    columnEnter.append("text")
+    .attr("class", "column-text")
+    .attr("y", d => {
+      if (d[0] !== 2020) {
+        return -350;
+      } else {
+        return -52
+      }})
+    .attr("x", 5) // Adjust the y-coordinate as needed
+    .text((d) => {
+      return  "movies"
+    }) 
+
 
     // Update
     columnEnter.merge(column).attr("transform", (d) => `translate(${vis.xScale(vis.xValue(d))}, 0)`);

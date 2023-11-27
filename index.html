@@ -10,7 +10,7 @@
 <body>    
     <h1>Movie Dashboard</h1>
     <div class="top-container">
-        <div class="tree-map">
+        <div class="left-text-container">
             <ul class="legend">
                 <li class="legend-item" data-category="winter-storm-freeze">
                     <div class="legend-circle" style="background-color: #1f77b4"></div>
@@ -38,6 +38,19 @@
                     Horror</li>             
                               
             </ul>
+            <h4> Our dataset contains movie data scraped from IMDb. This visualization shows the top movies
+                between 2010 and 2020 with 8 different genres.
+                Here is the <a href="https://www.kaggle.com/datasets/danielgrijalvas/movies/">link</a> to our dataset. 
+            </h4>
+            <div>
+                <h3>Instruction:</h3>
+                <h4>You could click on the genre(s) on the treemap to choose the particular genre(s) to examine.</h4>
+
+            </div>
+
+            
+        </div>
+        <div class="tree-map">
             <div id="treemapDiv"></div>
             </div>
         <div id="squareBarDiv"></div>

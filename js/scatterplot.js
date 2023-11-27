@@ -8,7 +8,7 @@ class ScatterPlot {
   constructor(_config, _data) {
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: 1000,
+      containerWidth: 900,
       containerHeight: 400,
       margin: {top: 75, right: 20, bottom: 20, left: 35},
       tooltipPadding: 15,
@@ -65,7 +65,7 @@ class ScatterPlot {
         .attr('class', 'chart-title')
         .attr('dy', '.71em')
         .attr('x', 0)
-        .attr('y', 0)
+        .attr('y', 5)
         .style('text-anchor', 'left')
         .text(vis.config.title);
 
