@@ -42,8 +42,8 @@ d3.csv("data/movies.csv")
 
     dispatcher.on('selectMovie', function(movieName) {
       scatterPlotVis.highlightPoint(movieName);
-      votesScorePlotVis.highlightPoint(movieName);
       squareBar.highlightSquare(movieName);
+      votesScorePlotVis.highlightPoint(movieName);
     });
   })
   .catch(error => console.error('Error loading the dataset:', error));
@@ -77,13 +77,13 @@ dispatcher.on('filterGenre', function(eventData) {
   console.log("eventData: ", eventData)
     genresSelected = eventData
     let filtered_data = data;
-    
     if (eventData.length !== 0) {
       //Retrieve all data that has the genre you selected
       filtered_data = data.filter(d => eventData.includes(d.genre));
     }
+    console.log(filtered_data);
 
-    squareBar.data = filtered_data
+    squareBar.selectedGenre = genresSelected
     scatterPlotVis.data = filtered_data
     votesScorePlotVis.data = filtered_data
     squareBar.updateVis()

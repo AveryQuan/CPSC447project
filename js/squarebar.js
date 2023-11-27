@@ -17,7 +17,7 @@ class Squarebar {
       legendRadius: 5,
     };
     this.data = _data;
-    this.selectedCategories = [];
+    this.selectedGenre = [];
     this.initVis();
   }
 
@@ -87,9 +87,10 @@ class Squarebar {
    */
   updateVis() {
     let vis = this;
+    console.log(this.data, "updated data");
 
     vis.groupedData = d3.groups(vis.data, (d) => d.year);
-
+    console.log(vis.groupedData, "grouped data");
     vis.xValue = (d) => d[0];
 
     vis.xScale.domain(vis.groupedData.map(vis.xValue));
@@ -167,10 +168,20 @@ class Squarebar {
       })
       .attr("width", "8px")
       .attr("height", "8px")
-      .attr("fill", (d) => genreColour[d.genre] || "#dbdb8d")
+      .attr("fill", (d) => {
+
+          return genreColour[d.genre] || "#dbdb8d"
+        })
+      .attr("fill-opacity", (d) => {
+        if ((vis.selectedGenre.length !== 0) && (!vis.selectedGenre.includes(d.genre))) {
+          return "0.15"
+        } else {
+          return "0.8"
+        }})
       .attr("stroke", "#333333")
       .attr("stroke-width", 1)
       .on("mouseover", (event, d) => {
+        if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
         // Darken the border color on hover
         d3.select(event.currentTarget).attr("stroke", "black");
         d3.select(event.currentTarget).attr("stroke-width", 2);
@@ -187,22 +198,30 @@ class Squarebar {
               <strong>gross: $<strong>${d.gross || "NA"}</strong>&nbsp;</strong>
             </div>
           `);
+        }
+
       })
       .on("mouseleave", (event, d) => {
+        if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
         // Restore the original border color on mouse leave
         d3.select(event.currentTarget).attr("stroke", "#333333");
         d3.select(event.currentTarget).attr("stroke-width", 1);
 
         // Hide the tooltip
         d3.select("#tooltip").style("display", "none");
+        }
+
       })
-      .on('click', d => {
-        console.log('Squarebar clicked:', d.name);
+      .on('click', (event, d) => {
+        if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
+        console.log('Squarebar clicked:', d);
         dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
+        }
+
       });
 
     // Exit square
-    squareEnter.exit().remove();
+    // squareEnter.exit().remove();
   }
 
   renderLegend() {
@@ -214,12 +233,15 @@ class Squarebar {
 
   highlightSquare(movieName) {
     console.log('Highlighting in Squarebar:', movieName);
-    this.chart.selectAll('.square')
+    const vis = this;
+    vis.chart.selectAll('.square')
       .classed('highlighted', d => d.name === movieName);
   }
   
   unhighlightSquares() {
-    this.chart.selectAll('.square')
+    console.log("here")
+    const vis = this;
+    vis.chart.selectAll('.square')
       .classed('highlighted', false);
   }
 }

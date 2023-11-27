@@ -139,6 +139,28 @@ class ScatterPlot {
   renderVis() {
     let vis = this;
 
+    let genreColour = {
+      Comedy: "#1f77b4",
+      Action: "#ff7f0e",
+      Drama: "#2ca02c",
+      Crime: "#d62728",
+      Biography: "#9467bd",
+      Adventure: "#8c564b",
+      Animation: "#e377c2",
+      Horror: "#7f7f7f",
+      Fantasy: "#bcbd22",
+      Mystery: "#17becf",
+      Thriller: "#aec7e8",
+      Family: "#ffbb78",
+      "Sci-Fi": "#98df8a",
+      Romance: "#ff9896",
+      Western: "#c5b0d5",
+      Musical: "#c49c94",
+      Music: "#f7b6d2",
+      History: "#c7c7c7",
+      Sport: "#dbdb8d",
+    };
+
     // Add circles
     const circles = vis.chart.selectAll('.point')
         .data(vis.data, d => d.name)
@@ -146,7 +168,10 @@ class ScatterPlot {
         .attr('class', 'point')
         .attr('r', 4)
         .attr('cy', d => vis.yScale(vis.config.yValue(d)))
-        .attr('cx', d => vis.xScale(vis.config.xValue(d)))
+        .attr('cx', d => vis.xScale(vis.config.xValue(d)))      
+        .attr("fill", (d) => {
+          return genreColour[d.genre] || "#dbdb8d"
+        })
         .on('click', d => {
           dispatcher.call('selectMovie', null, d.name);
         });
@@ -172,7 +197,7 @@ class ScatterPlot {
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
         })
-        .on('click', d => {
+        .on('click', (event, d) => {
           console.log('ScatterPlot clicked:', d.name); // Logging the clicked movie name
           dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
         });
