@@ -50,12 +50,19 @@ d3.csv("data/movies.csv")
 
 function preprocessData(_data) {
     _data.forEach(d => {
-        d.year = +d.year;
-        d.score = +d.score;
-        d.votes = Math.abs(Number(d.votes)) / 1.0e+6;
-        d.gross = Math.abs(Number(d.gross)) / 1.0e+9;
+      d.year = +d.year;
+      if (d.score !== "") {
+          d.score = +d.score;
+      }
+      if (d.votes !== "") {
+          d.votes = Math.abs(Number(d.votes)) / 1.0e+6;
+      }
+      if (d.gross !== "") {
+          d.gross = Math.abs(Number(d.gross)) / 1.0e+9;
+      }
     });
     
+    _data = _data.filter(d => d.score !== "" || d.votes !== "" || d.gross !== "");
     _data = _data.filter(d => d.year >= 2010);
 
     const genreFrequency = d3.rollup(_data, v => v.length, d => d.genre);
