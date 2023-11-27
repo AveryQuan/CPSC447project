@@ -7,14 +7,14 @@ class TreeMap {
   constructor(_config, data, dispatcher) {
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: 1000,
+      containerWidth: 500,
       containerHeight: 380,
       tooltipPadding: 15,
       margin: {
-        top: 15,
-        right: 15,
+        top: 80,
+        right: 40,
         bottom: 20,
-        left: 25
+        left: 60
       }
     }
     this.data = data;
@@ -39,7 +39,13 @@ class TreeMap {
     vis.chart = vis.svg.append('g')
       .attr('transform', `translate(${vis.config.margin.left},${vis.config.margin.top})`);
 
-
+    vis.title = vis.svg.append('text')
+      .attr('class', 'chart-title')
+      .attr('dy', '.71em')
+      .attr('x', 58)
+      .attr('y', 2)
+      .style('text-anchor', 'left')
+      .text("Distribution of Movie Genres");
     vis.listOfGenres = ['Comedy', 'Action', 'Drama', 'Crime', 'Biography', 'Adventure', 'Animation', 'Horror', 'Fantasy', 'Mystery', 'Thriller', 'Family', 'Sci-Fi', 'Romance', 'Western', 'Musical', 'Music', 'History', 'Sport']
     vis.genreColour = {
         Comedy: "#1f77b4",
@@ -77,6 +83,7 @@ class TreeMap {
         obj[key] = value;
         return obj;
       }, {});
+    console.log(vis.genresKeyValue)
     genres.sort((a, b) => b[1] - a[1]);
 
     vis.colourScale.domain(vis.listOfGenres);
@@ -102,6 +109,17 @@ class TreeMap {
     .attr('fill', d => vis.colourScale(d.data[0]))
     .attr('stroke', 'white')
     .attr('stroke-width', 2);
+
+    rect.on('click', function(event, d) {
+      const isSelected = d3.select(this).classed('selected');
+      // d3.selectAll('.tree-map-rect.selected').classed('selected', false)
+      d3.select(this).classed('selected', !isSelected);
+      const eventData = vis.chart.selectAll('.tree-map-rect.selected').data().map(k => k.data[0])
+
+      console.log(eventData)
+
+      vis.dispatcher.call('filterGenre', event, eventData)
+    })
 
 
     rect.on('mouseover', (event,d) => {

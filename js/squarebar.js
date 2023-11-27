@@ -9,7 +9,7 @@ class Squarebar {
       parentElement: _config.parentElement,
       disasterCategories: _config.disasterCategories,
       containerWidth: 800,
-      containerHeight: 500,
+      containerHeight: 440,
       tooltipPadding: 15,
       margin: { top: 400, right: 20, bottom: 20, left: 45 },
       legendWidth: 170,
@@ -17,7 +17,7 @@ class Squarebar {
       legendRadius: 5,
     };
     this.data = _data;
-    this.selectedCategories = [];
+    this.selectedGenre = [];
     this.initVis();
   }
 
@@ -36,7 +36,7 @@ class Squarebar {
 
     vis.xScale = d3.scaleBand().range([0, vis.width]).paddingInner(0.2);
 
-    vis.xAxis = d3.axisBottom(vis.xScale);
+    vis.xAxis = d3.axisBottom(vis.xScale).tickSize(0);
 
     vis.yAxis = d3.axisLeft(vis.yScale).tickSize(-vis.width - 10);
 
@@ -74,6 +74,19 @@ class Squarebar {
     // Optional: other static elements
     // ...
 
+    vis.title = vis.svg.append('text')
+    .attr('class', 'chart-title')
+    .attr('dy', '.71em')
+    .attr('x', 48)
+    .attr('y', 2)
+    .style('text-anchor', 'left')
+    .text("Movies Overview");
+
+    dispatcher.on('selectMovie.squarebar', movieName => {
+      console.log('Squarebar highlighting:', movieName);
+      this.highlightSquare(movieName);
+    });
+
     vis.updateVis();
   }
 
@@ -82,9 +95,10 @@ class Squarebar {
    */
   updateVis() {
     let vis = this;
+    console.log(this.data, "updated data");
 
     vis.groupedData = d3.groups(vis.data, (d) => d.year);
-
+    console.log(vis.groupedData, "grouped data");
     vis.xValue = (d) => d[0];
 
     vis.xScale.domain(vis.groupedData.map(vis.xValue));
@@ -128,6 +142,38 @@ class Squarebar {
     // Enter
     const columnEnter = column.enter().append("g").attr("class", "column");
 
+    columnEnter.append("text")
+    .attr("class", "column-text")
+    .attr("y", d => {
+      if (d[0] !== 2020) {
+        return -363;
+      } else {
+        return -62
+      }})
+    .attr("x", d => {
+      if (d[0] !== 2020) {
+        return 15;
+      } else {
+        return 19
+      }}) // Adjust the y-coordinate as needed
+    .text((d) => {
+      return d[1].length
+    }) 
+  
+    columnEnter.append("text")
+    .attr("class", "column-text")
+    .attr("y", d => {
+      if (d[0] !== 2020) {
+        return -350;
+      } else {
+        return -52
+      }})
+    .attr("x", 5) // Adjust the y-coordinate as needed
+    .text((d) => {
+      return  "movies"
+    }) 
+
+
     // Update
     columnEnter.merge(column).attr("transform", (d) => `translate(${vis.xScale(vis.xValue(d))}, 0)`);
 
@@ -140,7 +186,12 @@ class Squarebar {
     const squares = column
       .merge(columnEnter)
       .selectAll(".square")
-      .data((d) => d[1]);
+      .data((d) => d[1], d => d.name)
+      .on('click', d => {
+        dispatcher.call('selectMovie', null, d.name);
+      });
+
+    
 
     // Enter square
     const squareEnter = squares.enter().append("rect").attr("class", "square");
@@ -157,10 +208,20 @@ class Squarebar {
       })
       .attr("width", "8px")
       .attr("height", "8px")
-      .attr("fill", (d) => genreColour[d.genre] || "#dbdb8d")
+      .attr("fill", (d) => {
+
+          return genreColour[d.genre] || "#dbdb8d"
+        })
+      .attr("fill-opacity", (d) => {
+        if ((vis.selectedGenre.length !== 0) && (!vis.selectedGenre.includes(d.genre))) {
+          return "0.15"
+        } else {
+          return "0.8"
+        }})
       .attr("stroke", "#333333")
       .attr("stroke-width", 1)
       .on("mouseover", (event, d) => {
+        if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
         // Darken the border color on hover
         d3.select(event.currentTarget).attr("stroke", "black");
         d3.select(event.currentTarget).attr("stroke-width", 2);
@@ -177,18 +238,30 @@ class Squarebar {
               <strong>gross: $<strong>${d.gross || "NA"}</strong>&nbsp;</strong>
             </div>
           `);
+        }
+
       })
       .on("mouseleave", (event, d) => {
+        if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
         // Restore the original border color on mouse leave
         d3.select(event.currentTarget).attr("stroke", "#333333");
         d3.select(event.currentTarget).attr("stroke-width", 1);
 
         // Hide the tooltip
         d3.select("#tooltip").style("display", "none");
+        }
+
+      })
+      .on('click', (event, d) => {
+        if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
+        console.log('Squarebar clicked:', d);
+        dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
+        }
+
       });
 
     // Exit square
-    squareEnter.exit().remove();
+    // squareEnter.exit().remove();
   }
 
   renderLegend() {
@@ -196,5 +269,19 @@ class Squarebar {
 
     // Todo: Display the disaster category legend that also serves as an interactive filter.
     // You can add the legend also to `index.html` instead and have your event listener in `main.js`.
+  }
+
+  highlightSquare(movieName) {
+    console.log('Highlighting in Squarebar:', movieName);
+    const vis = this;
+    vis.chart.selectAll('.square')
+      .classed('highlighted', d => d.name === movieName);
+  }
+  
+  unhighlightSquares() {
+    console.log("here")
+    const vis = this;
+    vis.chart.selectAll('.square')
+      .classed('highlighted', false);
   }
 }

@@ -86,7 +86,7 @@ class ScatterPlot {
         .attr('class', 'chart-title')
         .attr('dy', '.71em')
         .attr('x', 0)
-        .attr('y', 0)
+        .attr('y', 5)
         .style('text-anchor', 'left')
         .text(vis.config.title);
 
@@ -104,7 +104,6 @@ class ScatterPlot {
         .attr('dy', '.71em')
         .text(vis.config.yTitle);
 
-
     vis.xAxisBrushG = vis.brushGroup.append('g')
         .attr('class', 'axis x-axis')
         .attr('transform', `translate(0,${vis.config.contextHeight})`);
@@ -121,6 +120,13 @@ class ScatterPlot {
         .on('end', function({selection}) {
           if (!selection) vis.brushed(null);
         });
+
+        dispatcher.on('selectMovie.scatterplot', movieName => {
+          console.log('ScatterPlot highlighting:', movieName);
+          this.highlightPoint(movieName);
+        });
+
+      vis.updateVis();
 
   }
 
@@ -161,6 +167,9 @@ class ScatterPlot {
     vis.yScaleBrush
         .domain([0, d3.max(vis.data, vis.config.yValue)]);
 
+        console.log('Example data item in ScatterPlot:', vis.data[1]); // Add this line
+
+
     vis.renderVis();
   }
 
@@ -170,14 +179,42 @@ class ScatterPlot {
   renderVis() {
     let vis = this;
 
+    let genreColour = {
+      Comedy: "#1f77b4",
+      Action: "#ff7f0e",
+      Drama: "#2ca02c",
+      Crime: "#d62728",
+      Biography: "#9467bd",
+      Adventure: "#8c564b",
+      Animation: "#e377c2",
+      Horror: "#7f7f7f",
+      Fantasy: "#bcbd22",
+      Mystery: "#17becf",
+      Thriller: "#aec7e8",
+      Family: "#ffbb78",
+      "Sci-Fi": "#98df8a",
+      Romance: "#ff9896",
+      Western: "#c5b0d5",
+      Musical: "#c49c94",
+      Music: "#f7b6d2",
+      History: "#c7c7c7",
+      Sport: "#dbdb8d",
+    };
+
     // Add circles
-    vis.circles = vis.chart.selectAll('.point')
-        .data(vis.data, d => d.trail)
+    const circles = vis.chart.selectAll('.point')
+        .data(vis.data, d => d.name)
       .join('circle')
         .attr('class', 'point')
         .attr('r', 4)
         .attr('cy', d => vis.yScale(vis.config.yValue(d)))
-        .attr('cx', d => vis.xScale(vis.config.xValue(d)));
+        .attr('cx', d => vis.xScale(vis.config.xValue(d)))
+        .attr("fill", (d) => {
+          return genreColour[d.genre] || "#dbdb8d"
+        })
+        .on('click', d => {
+          dispatcher.call('selectMovie', null, d.name);
+        });
 
     // Tooltip event listeners
     vis.circles
@@ -199,6 +236,10 @@ class ScatterPlot {
         })
         .on('mouseleave', () => {
           d3.select('#tooltip').style('display', 'none');
+        })
+        .on('click', (event, d) => {
+          console.log('ScatterPlot clicked:', d.name); // Logging the clicked movie name
+          dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
         });
 
     const circlesBrush = vis.brushGroup.selectAll('.point')
@@ -218,6 +259,17 @@ class ScatterPlot {
     vis.yAxisG
         .call(vis.yAxis)
         .call(g => g.select('.domain').remove())
+
+  }
+  highlightPoint(movieName) {
+    console.log('Highlighting in ScatterPlot:', movieName);
+    this.chart.selectAll('.point')
+      .classed('highlighted', d => d.name === movieName);
+  }
+
+  unhighlightPoints() {
+    this.chart.selectAll('.point')
+      .classed('highlighted', false);
 
     vis.xAxisBrushG.call(vis.xAxisBrush);
 

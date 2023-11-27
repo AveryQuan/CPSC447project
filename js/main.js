@@ -1,6 +1,6 @@
-let data, scatterPlotVis, treemapVis, votesScorePlotVis;
+let data, scatterPlotVis, treemapVis, votesScorePlotVis, squareBar, uniqueGenres;
 
-const dispatcher = d3.dispatch('event1', 'event2'); // Replace events with event names
+const dispatcher = d3.dispatch('filterGenre', 'selectMovie'); // Replace events with event names
 
 d3.csv("data/movies.csv")
   .then(_data => {
@@ -31,14 +31,20 @@ d3.csv("data/movies.csv")
     treeMap = new TreeMap({ parentElement: '#treemapDiv' }, data, dispatcher);
     treeMap.updateVis();
 
-    const squarebar = new Squarebar (
+    squareBar = new Squarebar (
       {
         parentElement: "#squareBarDiv",
         // Optional: other configurations
       },
       data
     );
-    squarebar.updateVis();
+    squareBar.updateVis();
+
+    dispatcher.on('selectMovie', function(movieName) {
+      scatterPlotVis.highlightPoint(movieName);
+      squareBar.highlightSquare(movieName);
+      votesScorePlotVis.highlightPoint(movieName);
+    });
   })
   .catch(error => console.error('Error loading the dataset:', error));
 
@@ -49,12 +55,10 @@ function preprocessData(_data) {
         d.votes = Math.abs(Number(d.votes)) / 1.0e+6;
         d.gross = Math.abs(Number(d.gross)) / 1.0e+9;
     });
-
+    
     _data = _data.filter(d => d.year >= 2010);
 
     const genreFrequency = d3.rollup(_data, v => v.length, d => d.genre);
-
-
     let genreToFrequencyMap = new Map(genreFrequency);
 
     _data.sort((a, b) => {
@@ -63,10 +67,26 @@ function preprocessData(_data) {
         return genreBFrequency - genreAFrequency; 
     });
 
+    _data = _data.filter(d => genreToFrequencyMap.get(d.genre) > 10)
+
     return _data;
 }
 
-dispatcher.on('event1', function(someParameter) {
-    // scatterPlotVis.updateVis();
-    // etc.
+// When filtering by genre (selecting in tree map)
+dispatcher.on('filterGenre', function(eventData) {
+  console.log("eventData: ", eventData)
+    genresSelected = eventData
+    let filtered_data = data;
+    if (eventData.length !== 0) {
+      //Retrieve all data that has the genre you selected
+      filtered_data = data.filter(d => eventData.includes(d.genre));
+    }
+    console.log(filtered_data);
+
+    squareBar.selectedGenre = genresSelected
+    scatterPlotVis.data = filtered_data
+    votesScorePlotVis.data = filtered_data
+    squareBar.updateVis()
+    scatterPlotVis.updateVis()
+    votesScorePlotVis.updateVis()
 });
