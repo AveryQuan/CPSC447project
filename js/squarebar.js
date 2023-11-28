@@ -84,7 +84,7 @@ class Squarebar {
 
     dispatcher.on('selectMovie.squarebar', movieName => {
       console.log('Squarebar highlighting:', movieName);
-      this.highlightSquare(movieName);
+      this.highlightSquares(movieName);
     });
 
     vis.updateVis();
@@ -271,11 +271,11 @@ class Squarebar {
     // You can add the legend also to `index.html` instead and have your event listener in `main.js`.
   }
 
-  highlightSquare(movieName) {
-    console.log('Highlighting in Squarebar:', movieName);
-    const vis = this;
-    vis.chart.selectAll('.square')
-      .classed('highlighted', d => d.name === movieName);
+  
+  highlightSquares(movieNames) {
+    console.log('Highlighting in Squarebar:', movieNames);
+    this.chart.selectAll('.square')
+      .classed('highlighted', d => movieNames.includes(d.name));
   }
   
   unhighlightSquares() {

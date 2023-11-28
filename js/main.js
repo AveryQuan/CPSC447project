@@ -1,4 +1,5 @@
 let data, scatterPlotVis, treemapVis, votesScorePlotVis, squareBar, uniqueGenres;
+let selectedMovies = [];
 
 const dispatcher = d3.dispatch('filterGenre', 'selectMovie'); // Replace events with event names
 
@@ -41,9 +42,16 @@ d3.csv("data/movies.csv")
     squareBar.updateVis();
 
     dispatcher.on('selectMovie', function(movieName) {
-      scatterPlotVis.highlightPoint(movieName);
-      squareBar.highlightSquare(movieName);
-      votesScorePlotVis.highlightPoint(movieName);
+      const index = selectedMovies.indexOf(movieName);
+      if (index > -1) {
+        selectedMovies.splice(index, 1); // Remove if already selected
+      } else {
+        selectedMovies.push(movieName); // Add if not selected
+      }
+    
+      scatterPlotVis.highlightPoints(selectedMovies);
+      votesScorePlotVis.highlightPoints(selectedMovies);
+      squareBar.highlightSquares(selectedMovies);
     });
   })
   .catch(error => console.error('Error loading the dataset:', error));

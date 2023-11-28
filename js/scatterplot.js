@@ -129,7 +129,7 @@ class ScatterPlot {
 
     dispatcher.on('selectMovie.scatterplot', movieName => {
       console.log('ScatterPlot highlighting:', movieName);
-      this.highlightPoint(movieName);
+      this.highlightPoints(movieName);
     });
 
       vis.updateVis();
@@ -277,10 +277,11 @@ class ScatterPlot {
         .call(vis.brush)
         .call(vis.brush.move, defaultBrushSelection);
   }
-  highlightPoint(movieName) {
-    console.log('Highlighting in ScatterPlot:', movieName);
+  
+  highlightPoints(movieNames) {
+    console.log('Highlighting in ScatterPlot:', movieNames);
     this.chart.selectAll('.point')
-      .classed('highlighted', d => d.name === movieName);
+      .classed('highlighted', d => movieNames.includes(d.name));
   }
 
   unhighlightPoints() {
