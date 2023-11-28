@@ -1,7 +1,7 @@
 let data, scatterPlotVis, treemapVis, votesScorePlotVis, squareBar, uniqueGenres;
 let selectedMovies = [];
 
-const dispatcher = d3.dispatch('filterGenre', 'selectMovie'); // Replace events with event names
+const dispatcher = d3.dispatch('filterGenre', 'selectMovie'); 
 
 d3.csv("data/movies.csv")
   .then(_data => {
@@ -44,11 +44,10 @@ d3.csv("data/movies.csv")
     dispatcher.on('selectMovie', function(movieName) {
       const index = selectedMovies.indexOf(movieName);
       if (index > -1) {
-        selectedMovies.splice(index, 1); // Remove if already selected
+        selectedMovies.splice(index, 1); 
       } else {
-        selectedMovies.push(movieName); // Add if not selected
+        selectedMovies.push(movieName);
       }
-    
       scatterPlotVis.highlightPoints(selectedMovies);
       votesScorePlotVis.highlightPoints(selectedMovies);
       squareBar.highlightSquares(selectedMovies);

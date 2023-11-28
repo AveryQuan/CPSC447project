@@ -291,9 +291,7 @@ class ScatterPlot {
 
   }
 
-  /**
-   * React to brush events
-   */
+
   brushed(selection) {
     let vis = this;
 
@@ -309,8 +307,7 @@ class ScatterPlot {
       vis.xScale.domain(vis.xScaleBrush.domain());
     }
 
-    // Redraw circles and update x-axis labels in focus view
-
+    // Redraw circles and update x-axis labels in focus vie
     vis.circles
         .attr('cy', d => vis.yScale(vis.config.yValue(d)))
         .attr('cx', d => vis.xScale(vis.config.xValue(d)));
