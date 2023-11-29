@@ -128,8 +128,8 @@ class ScatterPlot {
         });
 
     dispatcher.on('selectMovie.scatterplot', movieName => {
-      console.log('ScatterPlot highlighting:', movieName);
-      this.highlightPoints(movieName);
+      // console.log('ScatterPlot highlighting:', movieName);
+      this.highlightPoints(movieName.name);
     });
 
       vis.updateVis();
@@ -173,7 +173,7 @@ class ScatterPlot {
     vis.yScaleBrush
         .domain([0, d3.max(vis.data, vis.config.yValue)]);
 
-        console.log('Example data item in ScatterPlot:', vis.data[1]); // Add this line
+        // console.log('Example data item in ScatterPlot:', vis.data[1]); // Add this line
 
 
     vis.renderVis();
@@ -219,7 +219,7 @@ class ScatterPlot {
           return genreColour[d.genre] || "#dbdb8d"
         })
         .on('click', d => {
-          dispatcher.call('selectMovie', null, d.name);
+          dispatcher.call('selectMovie', null, d);
         });
 
     // Tooltip event listeners
@@ -244,8 +244,8 @@ class ScatterPlot {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          console.log('ScatterPlot clicked:', d.name); // Logging the clicked movie name
-          dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
+          // console.log('ScatterPlot clicked:', d.name); // Logging the clicked movie name
+          dispatcher.call('selectMovie', null, d);  // Assuming 'name' is the unique identifier
         });
 
     const circlesBrush = vis.brushGroup.selectAll('.point')
@@ -279,9 +279,9 @@ class ScatterPlot {
   }
   
   highlightPoints(movieNames) {
-    console.log('Highlighting in ScatterPlot:', movieNames);
+    // console.log('Highlighting in ScatterPlot:', movieNames);
     this.chart.selectAll('.point')
-      .classed('highlighted', d => movieNames.includes(d.name));
+      .classed('highlighted', d => movieNames.includes(d));
   }
 
   unhighlightPoints() {

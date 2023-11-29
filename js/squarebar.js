@@ -83,8 +83,8 @@ class Squarebar {
     .text("Movies Overview");
 
     dispatcher.on('selectMovie.squarebar', movieName => {
-      console.log('Squarebar highlighting:', movieName);
-      this.highlightSquares(movieName);
+      // console.log('Squarebar highlighting:', movieName);
+      this.highlightSquares(movieName.name);
     });
 
     vis.updateVis();
@@ -95,10 +95,10 @@ class Squarebar {
    */
   updateVis() {
     let vis = this;
-    console.log(this.data, "updated data");
+    // console.log(this.data, "updated data");
 
     vis.groupedData = d3.groups(vis.data, (d) => d.year);
-    console.log(vis.groupedData, "grouped data");
+
     vis.xValue = (d) => d[0];
 
     vis.xScale.domain(vis.groupedData.map(vis.xValue));
@@ -188,7 +188,7 @@ class Squarebar {
       .selectAll(".square")
       .data((d) => d[1], d => d.name)
       .on('click', d => {
-        dispatcher.call('selectMovie', null, d.name);
+        dispatcher.call('selectMovie', null, d);
       });
 
     
@@ -254,8 +254,8 @@ class Squarebar {
       })
       .on('click', (event, d) => {
         if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
-        console.log('Squarebar clicked:', d);
-        dispatcher.call('selectMovie', null, d.name);  // Assuming 'name' is the unique identifier
+        // console.log('Squarebar clicked:', d);
+        dispatcher.call('selectMovie', null, d);  // Assuming 'name' is the unique identifier
         }
 
       });
@@ -273,13 +273,12 @@ class Squarebar {
 
   
   highlightSquares(movieNames) {
-    console.log('Highlighting in Squarebar:', movieNames);
+    // console.log('Highlighting in Squarebar:', movieNames);
     this.chart.selectAll('.square')
-      .classed('highlighted', d => movieNames.includes(d.name));
+      .classed('highlighted', d => movieNames.includes(d));
   }
   
   unhighlightSquares() {
-    console.log("here")
     const vis = this;
     vis.chart.selectAll('.square')
       .classed('highlighted', false);

@@ -1,7 +1,7 @@
 let data, scatterPlotVis, treemapVis, votesScorePlotVis, squareBar, uniqueGenres;
 let selectedMovies = [];
 
-const dispatcher = d3.dispatch('filterGenre', 'selectMovie'); 
+const dispatcher = d3.dispatch('filterGenre', 'selectMovie', 'deselectMovie'); 
 
 d3.csv("data/movies.csv")
   .then(_data => {
@@ -41,16 +41,33 @@ d3.csv("data/movies.csv")
     );
     squareBar.updateVis();
 
-    dispatcher.on('selectMovie', function(movieName) {
-      const index = selectedMovies.indexOf(movieName);
+    dispatcher.on('selectMovie', function(movie) {
+      const index = selectedMovies.indexOf(movie);
       if (index > -1) {
         selectedMovies.splice(index, 1); 
       } else {
-        selectedMovies.push(movieName);
+        selectedMovies.push(movie);
       }
       scatterPlotVis.highlightPoints(selectedMovies);
       votesScorePlotVis.highlightPoints(selectedMovies);
       squareBar.highlightSquares(selectedMovies);
+    });
+    dispatcher.on('deselectMovie', function(eventData) {
+      if (eventData.length >= 1) {
+        var filteredMovies = [];
+
+        for (var i = 0; i < selectedMovies.length; i++) {
+          if (eventData.includes(selectedMovies[i].genre)) {
+            filteredMovies.push(selectedMovies[i]);
+          }
+        }
+      
+        selectedMovies = filteredMovies;
+        
+        scatterPlotVis.highlightPoints(selectedMovies);
+        votesScorePlotVis.highlightPoints(selectedMovies);
+        squareBar.highlightSquares(selectedMovies);
+      }
     });
   })
   .catch(error => console.error('Error loading the dataset:', error));
@@ -88,14 +105,14 @@ function preprocessData(_data) {
 
 // When filtering by genre (selecting in tree map)
 dispatcher.on('filterGenre', function(eventData) {
-  console.log("eventData: ", eventData)
+  // console.log("eventData: ", eventData)
     genresSelected = eventData
     let filtered_data = data;
     if (eventData.length !== 0) {
       //Retrieve all data that has the genre you selected
       filtered_data = data.filter(d => eventData.includes(d.genre));
     }
-    console.log(filtered_data);
+    // console.log(filtered_data);
 
     squareBar.selectedGenre = genresSelected
     scatterPlotVis.data = filtered_data
@@ -103,4 +120,11 @@ dispatcher.on('filterGenre', function(eventData) {
     squareBar.updateVis()
     scatterPlotVis.updateVis()
     votesScorePlotVis.updateVis()
+});
+
+d3.select('#reset-button').on('click', function() {
+  selectedMovies = [];
+  scatterPlotVis.highlightPoints(selectedMovies);
+  votesScorePlotVis.highlightPoints(selectedMovies);
+  squareBar.highlightSquares(selectedMovies);
 });

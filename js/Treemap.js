@@ -83,7 +83,7 @@ class TreeMap {
         obj[key] = value;
         return obj;
       }, {});
-    console.log(vis.genresKeyValue)
+    // console.log(vis.genresKeyValue)
     genres.sort((a, b) => b[1] - a[1]);
 
     vis.colourScale.domain(vis.listOfGenres);
@@ -116,9 +116,10 @@ class TreeMap {
       d3.select(this).classed('selected', !isSelected);
       const eventData = vis.chart.selectAll('.tree-map-rect.selected').data().map(k => k.data[0])
 
-      console.log(eventData)
+      // console.log(eventData)
 
       vis.dispatcher.call('filterGenre', event, eventData)
+      vis.dispatcher.call('deselectMovie', null, eventData)
     })
 
 
