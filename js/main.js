@@ -1,5 +1,6 @@
-let data, scatterPlotVis, treemapVis, votesScorePlotVis, squareBar, uniqueGenres;
+let data, scatterPlotVis, treeMap, votesScorePlotVis, squareBar, uniqueGenres;
 let selectedMovies = [];
+let selectedGenres = [];
 
 const dispatcher = d3.dispatch('filterGenre', 'selectMovie', 'deselectMovie'); 
 
@@ -123,7 +124,11 @@ dispatcher.on('filterGenre', function(eventData) {
 
 d3.select('#reset-button').on('click', function() {
   selectedMovies = [];
+  selectedGenres = [];
   scatterPlotVis.highlightPoints(selectedMovies);
   votesScorePlotVis.highlightPoints(selectedMovies);
   squareBar.highlightSquares(selectedMovies);
+  dispatcher.call('filterGenre', null, selectedGenres);
+  treeMap.chart.selectAll('.tree-map-rect.selected').remove();
+  treeMap.updateVis();
 });
