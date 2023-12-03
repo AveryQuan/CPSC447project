@@ -234,8 +234,8 @@ class Squarebar {
           .style("top", event.pageY + vis.config.tooltipPadding + "px").html(`
             <div class='tooltip-title'>${d.name}</div>
             <div class='flex-column'>
-              <strong>genre: $<strong>${d.genre || "NA"}</strong>&nbsp;</strong>
-              <strong>gross: $<strong>${d.gross || "NA"}</strong>&nbsp;</strong>
+              <strong>genre: <strong>${d.genre || "NA"}</strong>&nbsp;</strong>
+              <strong>revenue: $<strong>${d.gross || "NA"}</strong>&nbsp;</strong>
             </div>
           `);
         }

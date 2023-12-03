@@ -105,7 +105,7 @@ function preprocessData(_data) {
 
 // When filtering by genre (selecting in tree map)
 dispatcher.on('filterGenre', function(eventData) {
-  // console.log("eventData: ", eventData)
+  console.log("eventData: ", eventData)
     genresSelected = eventData
     let filtered_data = data;
     if (eventData.length !== 0) {
@@ -124,6 +124,7 @@ dispatcher.on('filterGenre', function(eventData) {
 
 d3.select('#reset-button').on('click', function() {
   selectedMovies = [];
+
   scatterPlotVis.highlightPoints(selectedMovies);
   votesScorePlotVis.highlightPoints(selectedMovies);
   squareBar.highlightSquares(selectedMovies);
