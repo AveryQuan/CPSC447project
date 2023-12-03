@@ -1,5 +1,6 @@
-let data, scatterPlotVis, treemapVis, votesScorePlotVis, squareBar, uniqueGenres;
+let data, scatterPlotVis, treeMap, votesScorePlotVis, squareBar, uniqueGenres;
 let selectedMovies = [];
+let selectedGenres = [];
 
 const dispatcher = d3.dispatch('filterGenre', 'selectMovie', 'deselectMovie'); 
 
@@ -105,14 +106,13 @@ function preprocessData(_data) {
 
 // When filtering by genre (selecting in tree map)
 dispatcher.on('filterGenre', function(eventData) {
-  console.log("eventData: ", eventData)
+  // console.log("eventData: ", eventData)
     genresSelected = eventData
     let filtered_data = data;
     if (eventData.length !== 0) {
       //Retrieve all data that has the genre you selected
       filtered_data = data.filter(d => eventData.includes(d.genre));
     }
-    // console.log(filtered_data);
 
     squareBar.selectedGenre = genresSelected
     scatterPlotVis.data = filtered_data
@@ -124,8 +124,10 @@ dispatcher.on('filterGenre', function(eventData) {
 
 d3.select('#reset-button').on('click', function() {
   selectedMovies = [];
-
   scatterPlotVis.highlightPoints(selectedMovies);
   votesScorePlotVis.highlightPoints(selectedMovies);
   squareBar.highlightSquares(selectedMovies);
+  dispatcher.call('filterGenre', null, selectedGenres);
+  treeMap.chart.selectAll('.tree-map-rect.selected').remove();
+  treeMap.updateVis();
 });

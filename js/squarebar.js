@@ -71,9 +71,6 @@ class Squarebar {
     // Apply clipping mask to 'vis.chart' to clip semicircles at the very beginning and end of a year
     vis.chart = vis.chartArea.append("g");
 
-    // Optional: other static elements
-    // ...
-
     vis.title = vis.svg.append('text')
     .attr('class', 'chart-title')
     .attr('dy', '.71em')
@@ -83,7 +80,6 @@ class Squarebar {
     .text("Movies Overview");
 
     dispatcher.on('selectMovie.squarebar', movieName => {
-      // console.log('Squarebar highlighting:', movieName);
       this.highlightSquares(movieName.name);
     });
 
@@ -95,7 +91,6 @@ class Squarebar {
    */
   updateVis() {
     let vis = this;
-    // console.log(this.data, "updated data");
 
     vis.groupedData = d3.groups(vis.data, (d) => d.year);
 
@@ -254,7 +249,6 @@ class Squarebar {
       })
       .on('click', (event, d) => {
         if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
-        // console.log('Squarebar clicked:', d);
         dispatcher.call('selectMovie', null, d);  // Assuming 'name' is the unique identifier
         }
 
@@ -273,7 +267,6 @@ class Squarebar {
 
   
   highlightSquares(movieNames) {
-    // console.log('Highlighting in Squarebar:', movieNames);
     this.chart.selectAll('.square')
       .classed('highlighted', d => movieNames.includes(d));
   }

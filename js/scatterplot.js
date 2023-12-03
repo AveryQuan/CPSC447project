@@ -128,7 +128,6 @@ class ScatterPlot {
         });
 
     dispatcher.on('selectMovie.scatterplot', movieName => {
-      // console.log('ScatterPlot highlighting:', movieName);
       this.highlightPoints(movieName.name);
     });
 
@@ -172,8 +171,6 @@ class ScatterPlot {
         .domain([0, d3.max(vis.data, vis.config.xValue)]);
     vis.yScaleBrush
         .domain([0, d3.max(vis.data, vis.config.yValue)]);
-
-        // console.log('Example data item in ScatterPlot:', vis.data[1]); // Add this line
 
 
     vis.renderVis();
@@ -244,8 +241,7 @@ class ScatterPlot {
           d3.select('#tooltip').style('display', 'none');
         })
         .on('click', (event, d) => {
-          // console.log('ScatterPlot clicked:', d.name); // Logging the clicked movie name
-          dispatcher.call('selectMovie', null, d);  // Assuming 'name' is the unique identifier
+          dispatcher.call('selectMovie', null, d);  
         });
 
     const circlesBrush = vis.brushGroup.selectAll('.point')
@@ -279,7 +275,6 @@ class ScatterPlot {
   }
   
   highlightPoints(movieNames) {
-    // console.log('Highlighting in ScatterPlot:', movieNames);
     this.chart.selectAll('.point')
       .classed('highlighted', d => movieNames.includes(d));
   }
