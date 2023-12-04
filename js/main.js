@@ -13,9 +13,9 @@ d3.csv("data/movies.csv")
         xValue: d => d.gross,
         yValue: d => d.score,
         title: "Movie Score vs Revenue",
-        xTitle: "Movie Revenue (in Billions)",
+        xTitle: "Movie Revenue (in Millions)",
         yTitle: "Movie Score",
-        xTick: " B"
+        xTick: " M"
       }, data);
     scatterPlotVis.updateVis();
 
@@ -83,7 +83,7 @@ function preprocessData(_data) {
           d.votes = Math.abs(Number(d.votes)) / 1.0e+6;
       }
       if (d.gross !== "") {
-          d.gross = Math.abs(Number(d.gross)) / 1.0e+9;
+          d.gross = Math.abs(Number(d.gross)) / 1.0e+6;
       }
     });
     

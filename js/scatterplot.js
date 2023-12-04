@@ -273,6 +273,9 @@ class ScatterPlot {
   highlightPoints(movieNames) {
     this.chart.selectAll('.point')
       .classed('highlighted', d => movieNames.includes(d));
+
+    this.chart.selectAll('.highlighted')
+        .raise();
   }
 
   unhighlightPoints() {
