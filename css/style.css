@@ -102,6 +102,10 @@ h1 {
   opacity: 0.5;
 }
 
+.pointBrush {
+  opacity: 0.5;
+}
+
 /* BarChart */
 
 .column-text {

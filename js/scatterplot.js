@@ -8,7 +8,7 @@ class ScatterPlot {
   constructor(_config, _data) {
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: 1000,
+      containerWidth: 800,
       containerHeight: 600,
       margin: {top: 75, right: 20, bottom: 70, left: 35},
       contextMargin: {top: 470, right: 10, bottom: 20, left: 35},
@@ -61,12 +61,6 @@ class ScatterPlot {
     vis.brushGroup = vis.svg.append('g')
         .attr('transform', `translate(${vis.config.contextMargin.left},${vis.config.contextMargin.top})`);
 
-    vis.brushGroup.append('defs').append('clipPath')
-        .attr('id', 'clip')
-        .append('rect')
-        .attr('width', vis.config.width)
-        .attr('height', vis.config.height);
-
     // Append group element that will contain our actual chart
     // and position it according to the given margin config
     vis.chart = vis.svg.append('g')
@@ -117,15 +111,7 @@ class ScatterPlot {
     vis.brushG = vis.brushGroup.append('g')
         .attr('class', 'brush x-brush');
 
-    // Initialize brush component
-    vis.brush = d3.brushX()
-        .extent([[0, 0], [vis.config.width, vis.config.contextHeight]])
-        .on('brush', function({selection}) {
-          if (selection) vis.brushed(selection);
-        })
-        .on('end', function({selection}) {
-          if (!selection) vis.brushed(null);
-        });
+
 
     dispatcher.on('selectMovie.scatterplot', movieName => {
       this.highlightPoints(movieName.name);
@@ -244,16 +230,26 @@ class ScatterPlot {
           dispatcher.call('selectMovie', null, d);  
         });
 
-    const circlesBrush = vis.brushGroup.selectAll('.point')
+    const circlesBrush = vis.brushGroup.selectAll('.pointBrush')
         .data(vis.data, d => d.name)
         .join('circle')
-        .attr('class', 'point')
+        .attr('class', 'pointBrush')
         .attr('r', 2)
         .attr("fill", (d) => {
           return genreColour[d.genre] || "#dbdb8d"
         })
         .attr('cy', d => vis.yScaleBrush(vis.config.yValue(d)))
         .attr('cx', d => vis.xScaleBrush(vis.config.xValue(d)));
+
+    // Initialize brush component
+    vis.brush = d3.brushX()
+        .extent([[-2, 0], [vis.config.width, vis.config.contextHeight]])
+        .on('brush', function({selection}) {
+          if (selection) vis.brushed(selection);
+        })
+        .on('end', function({selection}) {
+          if (!selection) vis.brushed(null);
+        });
 
     // Update the axes/gridlines
     // We use the second .call() to remove the axis and just show gridlines
@@ -268,7 +264,7 @@ class ScatterPlot {
     vis.xAxisBrushG.call(vis.xAxisBrush);
 
     // Update the brush and define a default position
-    const defaultBrushSelection = [vis.xScale(0), vis.xScaleBrush.range()[1]];
+    const defaultBrushSelection = [vis.xScale(0) -2, vis.xScaleBrush.range()[1] + 2];
     vis.brushG
         .call(vis.brush)
         .call(vis.brush.move, defaultBrushSelection);
@@ -282,8 +278,6 @@ class ScatterPlot {
   unhighlightPoints() {
     this.chart.selectAll('.point')
       .classed('highlighted', false);
-
-
   }
 
 
