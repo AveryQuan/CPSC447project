@@ -9,9 +9,9 @@ class ScatterPlot {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: 800,
-      containerHeight: 600,
+      containerHeight: 550,
       margin: {top: 75, right: 20, bottom: 70, left: 35},
-      contextMargin: {top: 470, right: 10, bottom: 20, left: 35},
+      contextMargin: {top: 420, right: 10, bottom: 20, left: 35},
       contextHeight: 100,
       tooltipPadding: 15,
       xValue: _config.xValue,
@@ -218,7 +218,7 @@ class ScatterPlot {
               <ul>
                 <li>Votes: ${d.votes + " M"}</li>
                 <li>Year: ${d.year}</li>
-                <li>Revenue: ${d.gross.toFixed(2) + " B"}</li>
+                <li>Revenue: ${d.gross.toFixed(2) + " M"}</li>
                 <li>Score: ${d.score}</li>
               </ul>
             `);
