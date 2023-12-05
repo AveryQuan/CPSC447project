@@ -227,11 +227,14 @@ class Squarebar {
           .style("display", "block")
           .style("left", event.pageX + vis.config.tooltipPadding + "px")
           .style("top", event.pageY + vis.config.tooltipPadding + "px").html(`
-            <div class='tooltip-title'>${d.name}</div>
-            <div class='flex-column'>
-              <strong>genre: <strong>${d.genre || "NA"}</strong>&nbsp;</strong>
-              <strong>revenue: $<strong>${d.gross || "NA"}</strong>&nbsp;</strong>
-            </div>
+              <div class="tooltip-title">${d.name}</div>
+              <div><i>${d.director}</i></div>
+              <ul>
+                <li>Votes: ${d.votes + " M"}</li>
+                <li>Year: ${d.year}</li>
+                <li>Revenue: ${d.gross.toFixed(2) + " B"}</li>
+                <li>Score: ${d.score}</li>
+              </ul>
           `);
         }
 
