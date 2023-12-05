@@ -12,7 +12,7 @@ d3.csv("data/movies.csv")
         parentElement: '#scatterPlotDiv',
         xValue: d => d.gross,
         yValue: d => d.score,
-        title: "Movie Score vs Revenue",
+        title: "Revenue vs Movie Score",
         xTitle: "Movie Revenue (in Millions)",
         yTitle: "Movie Score",
         xTick: " M"
