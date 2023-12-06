@@ -11,6 +11,11 @@ h1 {
 
 .top-container {
   display: inline-flex;
+  width: 93%;
+}
+
+.votesScorePadding {
+  padding-left: 40px;
 }
 
 /* Tree map */

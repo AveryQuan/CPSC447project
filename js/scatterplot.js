@@ -8,10 +8,10 @@ class ScatterPlot {
   constructor(_config, _data) {
     this.config = {
       parentElement: _config.parentElement,
-      containerWidth: 800,
-      containerHeight: 550,
+      containerWidth: 830,
+      containerHeight: 390,
       margin: {top: 75, right: 20, bottom: 70, left: 35},
-      contextMargin: {top: 440, right: 10, bottom: 20, left: 35},
+      contextMargin: {top: 290, right: 10, bottom: 20, left: 35},
       contextHeight: 75,
       tooltipPadding: 15,
       xValue: _config.xValue,
