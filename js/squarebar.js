@@ -232,7 +232,7 @@ class Squarebar {
               <ul>
                 <li>Votes: ${d.votes + " M"}</li>
                 <li>Year: ${d.year}</li>
-                <li>Revenue: ${d.gross.toFixed(2) + " B"}</li>
+                <li>Revenue: ${d.gross.toFixed(2) + " M"}</li>
                 <li>Score: ${d.score}</li>
               </ul>
           `);
