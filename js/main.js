@@ -106,7 +106,7 @@ function preprocessData(_data) {
 
 // When filtering by genre (selecting in tree map)
 dispatcher.on('filterGenre', function(eventData) {
-  // console.log("eventData: ", eventData)
+
     genresSelected = eventData
     let filtered_data = data;
     if (eventData.length !== 0) {
