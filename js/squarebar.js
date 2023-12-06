@@ -21,9 +21,6 @@ class Squarebar {
     this.initVis();
   }
 
-  /**
-   * We initialize the arc generator, scales, axes, and append static elements
-   */
   initVis() {
     let vis = this;
 
@@ -31,7 +28,7 @@ class Squarebar {
     vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
     vis.height = vis.config.containerHeight - vis.config.margin.top - vis.config.margin.bottom;
 
-    // Todo: Initialize scales and axes
+    // Initialize scales and axes
     vis.yScale = d3.scaleLinear().range([vis.height, 0]);
 
     vis.xScale = d3.scaleBand().range([0, vis.width]).paddingInner(0.2);
@@ -53,7 +50,7 @@ class Squarebar {
       .append("g")
       .attr("transform", `translate(${vis.config.margin.left},${vis.config.margin.top})`);
 
-    // Todo: Append axis groups
+    // Append axis groups
     vis.xAxisG = vis.chartArea.append("g").attr("class", "axis");
 
     vis.yAxisG = vis.chartArea.append("g").attr("class", "axis");
@@ -71,6 +68,7 @@ class Squarebar {
     // Apply clipping mask to 'vis.chart' to clip semicircles at the very beginning and end of a year
     vis.chart = vis.chartArea.append("g");
 
+    // Title
     vis.title = vis.svg.append('text')
     .attr('class', 'chart-title')
     .attr('dy', '.71em')
@@ -220,7 +218,7 @@ class Squarebar {
         // Darken the border color on hover
         d3.select(event.currentTarget).attr("stroke", "black");
         d3.select(event.currentTarget).attr("stroke-width", 2);
-        // Your existing tooltip code
+        // Tooltip code
         const value = d.value === null ? "No data available" : Math.round(d.value * 100) / 100;
         d3
           .select("#tooltip")
@@ -252,7 +250,7 @@ class Squarebar {
       })
       .on('click', (event, d) => {
         if ((vis.selectedGenre.length === 0) || (vis.selectedGenre.includes(d.genre))) {
-        dispatcher.call('selectMovie', null, d);  // Assuming 'name' is the unique identifier
+        dispatcher.call('selectMovie', null, d); 
         }
 
       });
@@ -260,15 +258,9 @@ class Squarebar {
     // Exit square
     // squareEnter.exit().remove();
   }
-
-  renderLegend() {
-    let vis = this;
-
-    // Todo: Display the disaster category legend that also serves as an interactive filter.
-    // You can add the legend also to `index.html` instead and have your event listener in `main.js`.
-  }
-
   
+
+  // this is called to highlight the squares in bi-directional linkage
   highlightSquares(movieNames) {
     this.chart.selectAll('.square')
       .classed('highlighted', d => movieNames.includes(d));
