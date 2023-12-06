@@ -81,7 +81,7 @@ class ScatterPlot {
         .tickSizeOuter(0)
         .ticks(6)
         .tickPadding(10)
-        .tickFormat(d => d + vis.config.xTick);;
+        .tickFormat(d => d + vis.config.xTick);
 
     vis.title = vis.svg.append('text')
         .attr('class', 'chart-title')
