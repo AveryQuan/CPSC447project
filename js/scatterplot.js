@@ -76,6 +76,7 @@ class ScatterPlot {
         .attr('y', 100)
         .attr('class', 'axis y-axis');
 
+    // Brush axis
     vis.xAxisBrush = d3.axisBottom(vis.xScaleBrush)
         .tickSizeOuter(0)
         .ticks(6)
@@ -110,8 +111,6 @@ class ScatterPlot {
 
     vis.brushG = vis.brushGroup.append('g')
         .attr('class', 'brush x-brush');
-
-
 
     dispatcher.on('selectMovie.scatterplot', movieName => {
       this.highlightPoints(movieName.name);
@@ -230,7 +229,8 @@ class ScatterPlot {
           dispatcher.call('selectMovie', null, d);  
         });
 
-    const circlesBrush = vis.brushGroup.selectAll('.pointBrush')
+    //draw points on slider
+    vis.brushGroup.selectAll('.pointBrush')
         .data(vis.data, d => d.name)
         .join('circle')
         .attr('class', 'pointBrush')
@@ -289,7 +289,7 @@ class ScatterPlot {
 
     // Check if the brush is still active or if it has been removed
     if (selection) {
-      // Convert given pixel coordinates (range: [x0,x1]) into a time period (domain: [Date, Date])
+      // Convert given pixel coordinates
       const selectedDomain = selection.map(vis.xScaleBrush.invert, vis.xScaleBrush);
 
       // Update x-scale of the focus view accordingly
@@ -299,7 +299,7 @@ class ScatterPlot {
       vis.xScale.domain(vis.xScaleBrush.domain());
     }
 
-    // Redraw circles and update x-axis labels in focus vie
+    // Redraw circles and update x-axis labels
     vis.circles
         .attr('cy', d => vis.yScale(vis.config.yValue(d)))
         .attr('cx', d => vis.xScale(vis.config.xValue(d)));
